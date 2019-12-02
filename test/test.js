@@ -1,5 +1,5 @@
 'use strict';
-const request = require('supertest');
+const request = require('supertest')
 const app = require('../app');
 const passportStub = require('passport-stub');
 
@@ -8,12 +8,12 @@ describe('/login', () => {
     passportStub.install(app);
     passportStub.login({ username: 'testuser' });
   });
-  
+
   after(() => {
     passportStub.logout();
     passportStub.uninstall(app);
   });
-
+  
   it('ログインのためのリンクが含まれる', (done) => {
     request(app)
       .get('/login')
@@ -27,5 +27,14 @@ describe('/login', () => {
       .get('/login')
       .expect(/testuser/)
       .expect(200, done);
+  });
+});
+
+describe('/logout', () => {
+  it('ログアウト時に/logoutへリダイレクトされる', (done) => {
+    request(app)
+      .get('/logout')
+      .expect('location', '/')
+      .expect(302, done);
   });
 });
